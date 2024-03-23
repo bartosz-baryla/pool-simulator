@@ -1,0 +1,20 @@
+﻿<Window x:Class="View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="800">
+    <Grid>
+
+        <Label Content="Witaj w programie!" HorizontalAlignment="Center" Height="38" Margin="0,23,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
+        <Label Content="WYBIERZ ILOŚĆ KUL:" HorizontalAlignment="Left" Height="38" Margin="276,126,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
+        <Button Content="+1" Click="actionAdd" HorizontalAlignment="Left" Height="30" Margin="557,212,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
+        <Button Content="-1" Click="actionSubtract" HorizontalAlignment="Left" Height="30" Margin="60,212,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
+        <TextBlock Text="1 " x:Name="value" HorizontalAlignment="Left" Height="70" Margin="336,192,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="173" FontSize="48" FontWeight="Bold"/>
+
+        <Button Content="ZATWIERDŹ" Click="actionApplyButtonClicked" HorizontalAlignment="Left" Height="30" Margin="306,311,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
+
+    </Grid>
+</Window>

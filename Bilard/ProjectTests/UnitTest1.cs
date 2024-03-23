@@ -1,8 +1,4 @@
-﻿
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace BilardTests
+namespace ProjectTests
 {
     [TestClass]
     public class UnitTest1
@@ -12,5 +8,6 @@ namespace BilardTests
         {
             Assert.IsFalse(false);
         }
+
     }
 }
