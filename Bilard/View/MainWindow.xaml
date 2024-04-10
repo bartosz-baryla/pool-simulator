@@ -3,18 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        Title="MainWindow" Height="600" Width="800">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
     <Grid>
 
-        <Label Content="Witaj w programie!" HorizontalAlignment="Center" Height="38" Margin="0,23,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
-        <Label Content="WYBIERZ ILOŚĆ KUL:" HorizontalAlignment="Left" Height="38" Margin="276,126,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
-        <Button Content="+1" Click="actionAdd" HorizontalAlignment="Left" Height="30" Margin="557,212,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
-        <Button Content="-1" Click="actionSubtract" HorizontalAlignment="Left" Height="30" Margin="60,212,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
-        <TextBlock Text="1 " x:Name="value" HorizontalAlignment="Left" Height="70" Margin="336,192,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="173" FontSize="48" FontWeight="Bold"/>
+        <Label Content="Witaj w programie!" HorizontalAlignment="Center" Height="38" Margin="0,10,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
+        <Label Content="WYBIERZ ILOŚĆ KUL:" HorizontalAlignment="Left" Height="38" Margin="276,53,0,0" VerticalAlignment="Top" Width="218" FontSize="20" FontWeight="Bold"/>
+        <Button Content="+1" Command="{Binding AddCommand}" HorizontalAlignment="Left" Height="30" Margin="514,111,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16" RenderTransformOrigin="0.5,0.5"/>
+        <Button Content="-1" Command="{Binding SubtractCommand}" HorizontalAlignment="Left" Height="30" Margin="99,111,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
+        <TextBox Text="{Binding BallsCount}" IsReadOnly="True" HorizontalAlignment="Left" Height="70" Margin="336,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="173" FontSize="48" FontWeight="Bold"/>
 
-        <Button Content="ZATWIERDŹ" Click="actionApplyButtonClicked" HorizontalAlignment="Left" Height="30" Margin="306,311,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16"/>
+        <Button Content="START" Command="{Binding StartCommand}" HorizontalAlignment="Left" Height="30" Margin="20,533,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16" BorderBrush="Black" Background="#FF39DC00"/>
+        <Button Content="STOP" Command="{Binding StopCommand}" HorizontalAlignment="Left" Height="30" Margin="227,533,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16" BorderBrush="Black" Background="#FFDC0B0B"/>
+        <Canvas HorizontalAlignment="Center" Height="330" Margin="0,166,0,0" VerticalAlignment="Top" Width="780" Background="Black"/>
 
     </Grid>
 </Window>

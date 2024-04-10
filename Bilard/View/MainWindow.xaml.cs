@@ -11,51 +11,14 @@ using System.Windows.Shapes;
 
 namespace View
 {
-
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void actionApplyButtonClicked(object sender, RoutedEventArgs e)
-        {
-            int val = int.Parse(value.Text);
-            SecondWindow secondWindow = new SecondWindow(val);
-            this.Close();
-            secondWindow.Show();
-
-        }
-
-        private void actionAdd(object sender, RoutedEventArgs e)
-        {
-            int val = int.Parse(value.Text);
-            if(val > 14)
-            {
-                MessageBox.Show("Nie może być więcej kul!");
-            }
-            else
-            {
-                val++;
-                value.Text = val.ToString();
-            }
-        }
-
-
-        private void actionSubtract(object sender, RoutedEventArgs e)
-        {
-            int val = int.Parse(value.Text);
-            if(val < 2)
-            {
-                MessageBox.Show("Nie może być mniej kul!");
-            }
-            else
-            {
-                val--;
-                value.Text = val.ToString();
-            }
         }
     }
 }
