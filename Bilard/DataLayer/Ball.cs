@@ -1,50 +1,106 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataLayer
 {
-    internal class Ball : IBall
+    public class Ball
     {
-        public double x0 { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double y0 { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double x1 { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double y1 { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public int r => throw new NotImplementedException();
-
-        public double m => throw new NotImplementedException();
-
-        public int Identifier => throw new NotImplementedException();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void Move(double time, ConcurrentQueue<IBall> queue)
+        /** Położenie kuli oraz jej promień. **/
+        private int x, y, r;
+        /** Kąt pod jakim leci kula. **/
+        private double angle;
+        public int X
         {
-            throw new NotImplementedException();
+            get => x;
+            set
+            {
+                x = value;
+            }
         }
 
-        public void Stop()
+        public int Y
         {
-            throw new NotImplementedException();
+            get => y;
+            set
+            {
+                y = value;
+            }
         }
-    }
 
-    public interface IBall : INotifyPropertyChanged
-    {
-        double x0 { get; set; }
-        double y0 { get; set; }
-        double x1 { get; set; }
-        double y1 { get; set; }
-        int r { get; }
-        double m { get; } // masa
-        int Identifier { get; }
+        public int R
+        {
+            get => r;
+            set
+            {
+                r = value;
+            }
+        }
 
-        void Move(double time, ConcurrentQueue<IBall> queue);
-        void Stop();
+        public double Angle
+        {
+            get => angle;
+            set
+            {
+                angle = value;
+            }
+        }
+
+        public Ball(int x, int y, int r, double angle)
+        {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.angle = angle;
+
+        }
+
+        public void MoveBall()
+        {
+            Random random = new Random();
+            // Obliczenie nowej pozycji piłki na podstawie kierunku
+            double dx = Math.Cos(angle) * 4;
+            double dy = Math.Sin(angle) * 4;
+            x += (int)dx;
+            y += (int)dy;
+
+            bool hitWall = false;
+            // Sprawdzenie czy piłka nie wychodzi poza kwadrat
+            if (x + r >= 800)
+            {
+                x = 800 - r;
+                angle = Math.PI - angle;
+                hitWall = true;
+            }
+            else if (x - r <= 0)
+            {
+                x = r;
+                angle = Math.PI - angle;
+                hitWall = true;
+            }
+
+            if (y + r >= 400)
+            {
+                y = 400 - r;
+                angle = -angle;
+                hitWall = true;
+            }
+            else if (y - r <= 0)
+            {
+                y = r;
+                angle = -angle;
+                hitWall = true;
+            }
+
+
+            if (hitWall)
+            {
+                angle += random.NextDouble() * Math.PI / 2 - Math.PI / 4;
+            }
+
+        }
+
     }
 }

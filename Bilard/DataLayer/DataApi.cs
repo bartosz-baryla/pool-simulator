@@ -9,10 +9,7 @@ namespace DataLayer
 {
     public abstract class DataAbstractApi
     {
-        public abstract int Width { get; }
-        public abstract int Height { get; }
-
-        public abstract IBall CreateBall(int number);
+        public abstract List<Ball> balls { get; }
         public static DataAbstractApi CreateApi()
         {
             return new DataApi();
@@ -20,13 +17,6 @@ namespace DataLayer
     }
     internal class DataApi : DataAbstractApi
     {
-        public override int Width => throw new NotImplementedException();
-
-        public override int Height => throw new NotImplementedException();
-
-        public override IBall CreateBall(int number)
-        {
-            throw new NotImplementedException();
-        }
+        public override List<Ball> balls { get; }
     }
 }

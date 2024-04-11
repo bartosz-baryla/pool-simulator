@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
-    <Compile Include="Board.cs" />
     <Compile Include="DataApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
