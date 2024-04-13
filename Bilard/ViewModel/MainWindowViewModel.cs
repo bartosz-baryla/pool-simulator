@@ -1,14 +1,8 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ViewModel;
 
 namespace ViewModel
 {
@@ -20,16 +14,18 @@ namespace ViewModel
         private int ballsCount = 5;
 
         /** Metoda wywoływana po przyciśnięciu przycisku start. */
-        public ICommand StartCommand { get; }
+        public ICommand StartCommand { get; set; }
 
         /** Metoda wywoływana po przyciśnięciu przycisku stop. */
-        public ICommand StopCommand { get; }
+        public ICommand StopCommand { get; set; }
 
         /** Metoda wywoływana po przyciśnięciu przycisku '+1'. */
         public ICommand AddCommand { get; }
 
         /** Metoda wywoływana po przyciśnięciu przycisku '-1'. */
         public ICommand SubtractCommand { get; }
+
+        private bool isFirstStart = true;
 
         /** Metoda służąca do tworzenia kul. */
         public ICommand CreateBalls { get; }
@@ -51,13 +47,18 @@ namespace ViewModel
             set
             {
                 ballsCount = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(BallsCount));
             }
         }
 
         private void StartAction()
         {
-            CreateBallsAction();
+            if(isFirstStart)
+            {
+                modelObj.CreateBalls(ballsCount);
+                isFirstStart = false;
+            }
+            modelObj.Start();
         }
 
         private void StopAction()
@@ -82,7 +83,6 @@ namespace ViewModel
             if (BallsCount < 15)
             {
                 BallsCount++;
-                OnPropertyChanged(nameof(BallsCount));
             }
         }
 
@@ -91,7 +91,6 @@ namespace ViewModel
             if (BallsCount > 5)
             {
                 BallsCount--;
-                OnPropertyChanged(nameof(BallsCount));
             }
         }
 

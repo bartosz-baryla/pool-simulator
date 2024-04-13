@@ -1,36 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataLayer
 {
-    public class Ball
+    public interface IBall
+    {
+        void Move();
+        double Angle { get; set; }
+        int R { get; set; }
+        int Y { get; set; }
+        int X { get; set; }
+
+    }
+
+    public class Ball : IBall
     {
         /** Położenie kuli oraz jej promień. **/
         private int x, y, r;
         /** Kąt pod jakim leci kula. **/
         private double angle;
-        public int X
+
+        double IBall.Angle
         {
-            get => x;
+            get => angle;
             set
             {
-                x = value;
+                angle = value;
             }
         }
 
-        public int Y
-        {
-            get => y;
-            set
-            {
-                y = value;
-            }
-        }
-
-        public int R
+        int IBall.R
         {
             get => r;
             set
@@ -39,12 +37,21 @@ namespace DataLayer
             }
         }
 
-        public double Angle
+        int IBall.Y
         {
-            get => angle;
+            get => y;
             set
             {
-                angle = value;
+                y = value;
+            }
+        }
+
+        int IBall.X
+        {
+            get => x;
+            set
+            {
+                x = value;
             }
         }
 
@@ -54,50 +61,51 @@ namespace DataLayer
             this.y = y;
             this.r = r;
             this.angle = angle;
-
         }
 
-        public void MoveBall()
+        public void Move()
         {
             Random random = new Random();
-            // Obliczenie nowej pozycji piłki na podstawie kierunku
+
             double dx = Math.Cos(angle) * 4;
             double dy = Math.Sin(angle) * 4;
             x += (int)dx;
             y += (int)dy;
 
-            bool hitWall = false;
-            // Sprawdzenie czy piłka nie wychodzi poza kwadrat
-            if (x + r >= 800)
+            bool colsion = false;
+            
+            //sprawdza zderzenie z prawą krawędzią
+            if (x + r >= (800 - (2*r)))
             {
-                x = 800 - r;
+                x = (800 - (2 * r)) - r;
                 angle = Math.PI - angle;
-                hitWall = true;
+                colsion = true;
             }
+            // sprawdza zdeżenie z lewą krawędzią
             else if (x - r <= 0)
             {
                 x = r;
                 angle = Math.PI - angle;
-                hitWall = true;
+                colsion = true;
             }
-
-            if (y + r >= 400)
+            // sprawdza zderzenie z dolną krawędzią
+            else if (y + r >= (400 - (2 * r)))
             {
-                y = 400 - r;
+                y = (400 - (2 * r)) - r;
                 angle = -angle;
-                hitWall = true;
+                colsion = true;
             }
+            // sprawdza zderzenie z górną krawędzią
             else if (y - r <= 0)
             {
                 y = r;
                 angle = -angle;
-                hitWall = true;
+                colsion = true;
             }
 
-
-            if (hitWall)
+            if (colsion)
             {
-                angle += random.NextDouble() * Math.PI / 2 - Math.PI / 4;
+                angle += random.NextDouble() * 90;
             }
 
         }

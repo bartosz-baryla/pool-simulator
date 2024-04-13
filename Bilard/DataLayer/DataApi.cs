@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DataLayer
 {
     public abstract class DataAbstractApi
     {
-        public abstract List<Ball> balls { get; }
+        public abstract List<IBall> balls { get; }
         public static DataAbstractApi CreateApi()
         {
             return new DataApi();
@@ -17,6 +12,6 @@ namespace DataLayer
     }
     internal class DataApi : DataAbstractApi
     {
-        public override List<Ball> balls { get; }
+        public override List<IBall> balls { get; }
     }
 }

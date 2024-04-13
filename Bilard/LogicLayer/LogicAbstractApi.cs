@@ -1,49 +1,43 @@
 ﻿using DataLayer;
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
+using System.Windows.Threading;
 
 namespace LogicLayer
 {
     public abstract class LogicAbstractApi
     {
-        public abstract List<Ball> balls { get; }
+        public abstract event EventHandler Update;
+        public abstract List<IBall> balls { get; }
         public abstract void CreateBalls(int ballCount);
         public abstract void Start();
         public abstract void Stop();
-        //public abstract void UpdateBalls();
-
+        public abstract void UpdateBalls();
+        public abstract void SetInterval(int ms);
         public abstract int GetX(int i);
         public abstract int GetY(int i);
         public abstract int GetR(int i);
         public abstract int GetCount { get; }
+        public abstract DispatcherTimer timer { get; }
         public static LogicAbstractApi CreateApi()
         {
-            return new LogicApi(/*TimerApi Timer = default(TimerApi)*/);
+            return new LogicApi();
         }
     }
 
     internal class LogicApi : LogicAbstractApi
     {
-        public override List<Ball> balls { get; }
+        public override DispatcherTimer timer { get; }
+        public override List<IBall> balls { get; }
         private readonly DataAbstractApi dataLayer;
 
-
-        public LogicApi(/*, TimerApi WPFTimer*/)
+        public LogicApi()
         {
             dataLayer = DataAbstractApi.CreateApi();
-            //timer = WPFTimer;
-            balls = new List<Ball>();
-            //SetInterval(1);
-            //timer.Tick += (sender, args) => UpdateBalls();
+            timer = new DispatcherTimer();
+            balls = new List<IBall>();
+            SetInterval(1);
+            timer.Tick += (sender, args) => UpdateBalls();
         }
 
         /** Metoda tworzy wybraną liczbę kul i nadaje im losowe położenie na stole oraz kąt pod jakim będą się poruszać. **/
@@ -53,14 +47,17 @@ namespace LogicLayer
             for (int i = 0; i < ballCount; i++)
             {
                 int r = 20;
-                int x = random.Next(0, 800-(2*r));
-                int y = random.Next(0, 400- (2 * r));
+                int x = random.Next(0 + (2 * r), 800 - (2 * r));
+                int y = random.Next(0 + (2 * r), 400 - (2 * r));
                 double angle = random.NextDouble() * 90.0;
-                Ball ball = new Ball(x, y, r, angle);
+                IBall ball = new Ball(x, y, r, angle);
                 balls.Add(ball);
             }
         }
-        //public override event EventHandler Update { add => timer.Tick += value; remove => timer.Tick -= value; }
+        public override event EventHandler Update { add => timer.Tick += value; remove => timer.Tick -= value; }
+        public TimeSpan Interval { get => timer.Interval; set => timer.Interval = value; }
+
+        public event EventHandler Tick { add => timer.Tick += value; remove => timer.Tick -= value; }
 
         public override int GetX(int i)
         {
@@ -72,6 +69,13 @@ namespace LogicLayer
             return balls[i].Y;
         }
 
+        public override void UpdateBalls()
+        {
+            foreach (IBall ball in balls)
+            {
+                ball.Move();
+            }
+        }
 
         public override int GetR(int i)
         {
@@ -83,13 +87,17 @@ namespace LogicLayer
 
         public override void Start()
         {
-            throw new NotImplementedException();
+            timer.Start();
         }
 
         public override void Stop()
         {
-            throw new NotImplementedException();
+            timer.Stop();
+        }
+
+        public override void SetInterval(int ms)
+        {
+            timer.Interval = TimeSpan.FromMilliseconds(ms);
         }
     }
-
 }

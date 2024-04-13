@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ViewModel
@@ -34,13 +30,6 @@ namespace ViewModel
         }
 
         public event EventHandler CanExecuteChanged;
-
-        ///internal void RaiseCanExecuteChanged()
-        ///{
-        ///    this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        ///}
-
-
     }
 
 }
