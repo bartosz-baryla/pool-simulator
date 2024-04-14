@@ -36,8 +36,8 @@ namespace LogicLayer
             dataLayer = DataAbstractApi.CreateApi();
             timer = new DispatcherTimer();
             balls = new List<IBall>();
-            SetInterval(1);
-            timer.Tick += (sender, args) => UpdateBalls();
+            SetInterval(10);
+            timer.Tick += (sender, args) => UpdateBalls(); //Dodanie wywołania UpdateBalls do przy wywołaniu Tick
         }
 
         /** Metoda tworzy wybraną liczbę kul i nadaje im losowe położenie na stole oraz kąt pod jakim będą się poruszać. **/
@@ -54,9 +54,10 @@ namespace LogicLayer
                 balls.Add(ball);
             }
         }
+        //Funkcja dodająca lub odejmująca wywołanie podanej funkcji do Tick
         public override event EventHandler Update { add => timer.Tick += value; remove => timer.Tick -= value; }
         public TimeSpan Interval { get => timer.Interval; set => timer.Interval = value; }
-
+        // Dodanie delegata dla zdarzenia timer.Tick
         public event EventHandler Tick { add => timer.Tick += value; remove => timer.Tick -= value; }
 
         public override int GetX(int i)
@@ -69,6 +70,7 @@ namespace LogicLayer
             return balls[i].Y;
         }
 
+        //* Funkcja aktualizująca kule */
         public override void UpdateBalls()
         {
             foreach (IBall ball in balls)
@@ -94,7 +96,6 @@ namespace LogicLayer
         {
             timer.Stop();
         }
-
         public override void SetInterval(int ms)
         {
             timer.Interval = TimeSpan.FromMilliseconds(ms);

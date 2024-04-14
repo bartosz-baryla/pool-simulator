@@ -42,7 +42,7 @@ namespace Model
             LogicLayer.Update += (sender, args) => Move();
         }
 
-
+        //* Funkcja tworząca obiekty Elips jako kule i dodająca je na plaszę */
         public override void CreateBalls(int ballsCount)
         {
             LogicLayer.CreateBalls(ballsCount);
@@ -62,7 +62,7 @@ namespace Model
                 Canvas.Children.Add(ball);
             }
         }
-
+        //* Funkcja tworząca kulę w nowym miesjcu i usuwająca kule w starej pozycji przed ruchem */
         public override void Move()
         {
              for (int i = 0; i < LogicLayer.GetCount; i++)

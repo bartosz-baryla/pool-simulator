@@ -2,8 +2,10 @@
 
 namespace DataLayer
 {
+    /* Interfejs kuli */
     public interface IBall
     {
+        /** Funkcja odpowiedzialna za poruszenie kuli, obsłużenie odbicia od ścianki */
         void Move();
         double Angle { get; set; }
         int R { get; set; }
@@ -102,7 +104,7 @@ namespace DataLayer
                 angle = -angle;
                 colsion = true;
             }
-
+            /* Przy zderzeniu zmieniamy kąt podróży kuli */
             if (colsion)
             {
                 angle += random.NextDouble() * 90;
