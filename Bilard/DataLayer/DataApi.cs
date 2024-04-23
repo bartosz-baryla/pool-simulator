@@ -13,5 +13,10 @@ namespace DataLayer
     internal class DataApi : DataAbstractApi
     {
         public override List<IBall> balls { get; }
+
+        public DataApi()
+        {
+            balls = new List<IBall>();
+        }
     }
 }
