@@ -22,8 +22,18 @@
 
         <Button Content="START" Command="{Binding StartCommand}" HorizontalAlignment="Left" Height="30" Margin="100,584,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16" BorderBrush="Black" Background="#FF39DC00"/>
         <Button Content="STOP" Command="{Binding StopCommand}" HorizontalAlignment="Left" Height="30" Margin="277,584,0,0" VerticalAlignment="Top" Width="158" FontWeight="Bold" FontSize="16" BorderBrush="Black" Background="#FFDC0B0B"/>
-        <Border Background="LightBlue" Margin="0,170,0,0" VerticalAlignment="Top" Width="800" Height="400">
-            <ContentPresenter Content="{Binding Canvas}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <Border Background="LightGreen" Margin="0,170,0,0" VerticalAlignment="Top" Width="800" Height="400">
+            <Canvas Width="800" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <ItemsControl Name="Balls" ItemsSource="{Binding Balls}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas>
+                                <Ellipse Fill="Red"  Canvas.Left="{Binding current_X}" Canvas.Top="{Binding current_Y}" Width="20" Height="20"/>
+                            </Canvas>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Canvas>
         </Border>
 
     </Grid>

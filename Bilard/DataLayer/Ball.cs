@@ -1,116 +1,150 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DataLayer
 {
     /* Interfejs kuli */
-    public interface IBall
+    public interface IBall : INotifyPropertyChanged
     {
         /** Funkcja odpowiedzialna za poruszenie kuli, obsłużenie odbicia od ścianki */
         void Move();
-        double Angle { get; set; }
-        int R { get; set; }
-        int Y { get; set; }
-        int X { get; set; }
+        void Stop();
+        void MakeThread(int period);
+        double current_Y { get; set; }
+        double next_Y { get; set; }
+        double current_X { get; set; }
+        double next_X { get; set; }
+        int ID { get; set; }
 
     }
 
-    public class Ball : IBall
+    internal class Ball : IBall
     {
-        /** Położenie kuli oraz jej promień. **/
-        private int x, y, r;
-        /** Kąt pod jakim leci kula. **/
-        private double angle;
+        private double current_y;
+        private double next_y;
+        private double current_x;
+        private double next_x;
+        private int id;
 
-        double IBall.Angle
+        private readonly Stopwatch stopwatch = new Stopwatch();
+        private bool stop = false;
+
+        public Ball(int id, double current_X, double current_Y, double next_X, double next_Y)
         {
-            get => angle;
+            this.id = id;
+            this.current_x = current_X;
+            this.current_y = current_Y;
+            this.next_x = next_X;
+            this.next_y = next_Y;
+        }
+
+        public int ID
+        {
+            get => id;
             set
             {
-                angle = value;
+                id = value;
             }
         }
 
-        int IBall.R
+        public double current_X
         {
-            get => r;
+            get => current_x;
             set
             {
-                r = value;
+                if (value.Equals(current_x))
+                {
+                    return;
+                }
+
+                current_x = value;
+                RaisePropertyChanged(nameof(current_x));
+            }
+        }
+        public double current_Y
+        {
+            get => current_y;
+            set
+            {
+                if (value.Equals(current_y))
+                {
+                    return;
+                }
+
+                current_y = value;
+                RaisePropertyChanged(nameof(current_Y));
             }
         }
 
-        int IBall.Y
+        public double next_X
         {
-            get => y;
+            get => next_x;
             set
             {
-                y = value;
+                if (value.Equals(next_x))
+                {
+                    return;
+                }
+
+                next_x = value;
+            }
+        }
+        public double next_Y
+        {
+            get => next_y;
+            set
+            {
+                if (value.Equals(next_y))
+                {
+                    return;
+                }
+
+                next_y = value;
             }
         }
 
-        int IBall.X
+        public event PropertyChangedEventHandler PropertyChanged;
+        internal void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
-            get => x;
-            set
-            {
-                x = value;
-            }
-        }
-
-        public Ball(int x, int y, int r, double angle)
-        {
-            this.x = x;
-            this.y = y;
-            this.r = r;
-            this.angle = angle;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Move()
         {
-            Random random = new Random();
-
-            double dx = Math.Cos(angle) * 4;
-            double dy = Math.Sin(angle) * 4;
-            x += (int)dx;
-            y += (int)dy;
-
-            bool colsion = false;
-            
-            //sprawdza zderzenie z prawą krawędzią
-            if (x + r >= (800 - (2*r)))
-            {
-                x = (800 - (2 * r)) - r;
-                angle = Math.PI - angle;
-                colsion = true;
-            }
-            // sprawdza zdeżenie z lewą krawędzią
-            else if (x - r <= 0)
-            {
-                x = r;
-                angle = Math.PI - angle;
-                colsion = true;
-            }
-            // sprawdza zderzenie z dolną krawędzią
-            else if (y + r >= (400 - (2 * r)))
-            {
-                y = (400 - (2 * r)) - r;
-                angle = -angle;
-                colsion = true;
-            }
-            // sprawdza zderzenie z górną krawędzią
-            else if (y - r <= 0)
-            {
-                y = r;
-                angle = -angle;
-                colsion = true;
-            }
-            /* Przy zderzeniu zmieniamy kąt podróży kuli */
-            if (colsion)
-            {
-                angle += random.NextDouble() * 90;
-            }
-
+            current_X += next_X;
+            current_Y += next_Y;
+        }
+        public void MakeThread(int period)
+        {
+            stop = false;
+            Run(period);
         }
 
+        private void Run(int period)
+        {
+            while (!stop)
+            {
+                stopwatch.Reset();
+                stopwatch.Start();
+                if (!stop)
+                {
+                    Move();
+                }
+                stopwatch.Stop();
+
+                int remainingTime = (int)(period - stopwatch.ElapsedMilliseconds);
+                if (remainingTime > 0)
+                {
+                    Thread.Sleep(remainingTime);
+                }
+            }
+        }
+        public void Stop()
+        {
+            stop = true;
+        }
     }
 }
