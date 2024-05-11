@@ -7,7 +7,7 @@ namespace Model
     {
         public abstract void Start();
         public abstract void Stop();
-        public abstract IList FirstStart(int ballVal);
+        public abstract IList FirstStart(int number);
 
 
         public static AbstractModelApi CreateApi()
@@ -24,7 +24,7 @@ namespace Model
             LogicLayer = LogicAbstractApi.CreateApi();
         }
 
-        public override IList FirstStart(int ballVal) => LogicLayer.CreateBalls(ballVal);
+        public override IList FirstStart(int number) => LogicLayer.CreateBalls(number);
 
         public override void Start()
         {

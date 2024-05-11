@@ -1,15 +1,11 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DataLayer
 {
-    /* Interfejs kuli */
     public interface IBall : INotifyPropertyChanged
     {
-        /** Funkcja odpowiedzialna za poruszenie kuli, obsłużenie odbicia od ścianki */
         void Move();
         void Stop();
         void MakeThread(int period);
@@ -21,7 +17,7 @@ namespace DataLayer
 
     }
 
-    internal class Ball : IBall
+    internal class Ball : IBall // zakładamy że każda kula ma masę 1 i promień 10.
     {
         private double current_y;
         private double next_y;
@@ -29,8 +25,8 @@ namespace DataLayer
         private double next_x;
         private int id;
 
-        private readonly Stopwatch stopwatch = new Stopwatch();
         private bool stop = false;
+        private Thread thread;
 
         public Ball(int id, double current_X, double current_Y, double next_X, double next_Y)
         {
@@ -61,9 +57,10 @@ namespace DataLayer
                 }
 
                 current_x = value;
-                RaisePropertyChanged(nameof(current_x));
+                RaisePropertyChanged(nameof(current_X));
             }
         }
+
         public double current_Y
         {
             get => current_y;
@@ -117,31 +114,27 @@ namespace DataLayer
             current_X += next_X;
             current_Y += next_Y;
         }
+
         public void MakeThread(int period)
         {
             stop = false;
-            Run(period);
+            thread = new Thread(() => Run(period));
+            thread.Start();
         }
 
         private void Run(int period)
         {
             while (!stop)
             {
-                stopwatch.Reset();
-                stopwatch.Start();
                 if (!stop)
                 {
                     Move();
                 }
-                stopwatch.Stop();
 
-                int remainingTime = (int)(period - stopwatch.ElapsedMilliseconds);
-                if (remainingTime > 0)
-                {
-                    Thread.Sleep(remainingTime);
-                }
+                Thread.Sleep(period);
             }
         }
+
         public void Stop()
         {
             stop = true;

@@ -11,6 +11,7 @@ namespace ViewModel
         private readonly AbstractModelApi modelObj;
         private int ballsCount = 5;
         private IList balls;
+        private bool is_first = true;
 
         public ICommand StartCommand { get; set; }
         public ICommand StopCommand { get; set; }
@@ -31,13 +32,13 @@ namespace ViewModel
             get => balls;
             set
             {
-                if (value.Equals(balls))
+                if (value == balls)
                 {
                     return;
                 }
 
                 balls = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Balls));
             }
         }
 
@@ -53,6 +54,11 @@ namespace ViewModel
 
         private void StartAction()
         {
+            if (is_first)
+            {
+                Balls = modelObj.FirstStart(BallsCount);
+                is_first = false;
+            }
             modelObj.Start();
         }
 
