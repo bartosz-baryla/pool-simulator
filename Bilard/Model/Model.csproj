@@ -44,10 +44,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IModelBall.cs" />
     <Compile Include="ModelApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Helpers\Helpers.csproj">
+      <Project>{2c2179ef-2508-483f-b7a6-c0635943359b}</Project>
+      <Name>Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogicLayer\LogicLayer.csproj">
       <Project>{9e1b8ffc-2830-4cb6-a36c-b8570b59d3e8}</Project>
       <Name>LogicLayer</Name>

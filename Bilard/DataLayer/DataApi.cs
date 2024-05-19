@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
@@ -17,7 +18,7 @@ namespace DataLayer
     }
     internal class DataApi : DataAbstractApi
     {
-        private ObservableCollection<IBall> balls { get; }
+        private List<IBall> balls { get; }
         private readonly Mutex mutex = new Mutex();
         private readonly int height = 400;
         private readonly int width = 800;
@@ -25,7 +26,7 @@ namespace DataLayer
 
         public DataApi()
         {
-            balls = new ObservableCollection<IBall>(); // klasa dziedziczy po IList, ale dodaje funkcjonalność związaną z powiadamianiem o zmianach.
+            balls = new List<IBall>();
         }
 
         public override IList CreateBalls(int number)
@@ -35,12 +36,12 @@ namespace DataLayer
             for (int i = 0; i < number; i++)
             {
                 mutex.WaitOne(); // Sekcja krytyczna - tylko jedna piłka jest tworzona na raz (zamek)
-                int xc = random.Next(10, width - 10);
-                int yc = random.Next(10, height - 10);// bo przyjmujemy r = 10
-                int xn = 3;
-                int yn = 3;
+                int x = random.Next(10, width - 20);
+                int y = random.Next(10, height - 20);
+                int vx = random.Next(50, 100);
+                int vy = random.Next(50, 100);
 
-                Ball ball = new Ball(i + 1, xc, yc, xn, yn);
+                Ball ball = new Ball(i + 1, x, y, vx, vy);
                 balls.Add(ball);
                 mutex.ReleaseMutex();
             }

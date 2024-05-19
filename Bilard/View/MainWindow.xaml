@@ -28,7 +28,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Canvas>
-                                <Ellipse Fill="Red"  Canvas.Left="{Binding current_X}" Canvas.Top="{Binding current_Y}" Width="20" Height="20"/>
+                                <Ellipse Fill="Red"  Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Width="20" Height="20"/>
                             </Canvas>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

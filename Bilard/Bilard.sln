@@ -19,9 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicLayerTests", "LogicLayerTests\LogicLayerTests.csproj", "{7731F2FC-A49E-4600-84FC-9A399C8EB974}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayerTests", "DataLayerTests\DataLayerTests.csproj", "{4184ACDD-0213-498F-8A52-DD7E50608E99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayerTests", "DataLayerTests\DataLayerTests.csproj", "{4184ACDD-0213-498F-8A52-DD7E50608E99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationLayerTests", "PresentationLayerTests\PresentationLayerTests.csproj", "{4D8AB983-BCB8-42BF-8A64-8BB135AE32C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLayerTests", "PresentationLayerTests\PresentationLayerTests.csproj", "{4D8AB983-BCB8-42BF-8A64-8BB135AE32C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{2C2179EF-2508-483F-B7A6-C0635943359B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -217,6 +219,26 @@ Global
 		{4D8AB983-BCB8-42BF-8A64-8BB135AE32C2}.Release|x64.Build.0 = Release|Any CPU
 		{4D8AB983-BCB8-42BF-8A64-8BB135AE32C2}.Release|x86.ActiveCfg = Release|Any CPU
 		{4D8AB983-BCB8-42BF-8A64-8BB135AE32C2}.Release|x86.Build.0 = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|ARM.Build.0 = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|ARM64.Build.0 = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|x64.Build.0 = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C2179EF-2508-483F-B7A6-C0635943359B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

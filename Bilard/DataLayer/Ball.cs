@@ -1,118 +1,57 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using Helpers;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace DataLayer
 {
-    public interface IBall : INotifyPropertyChanged
+    public interface IBall : IObservable<IBall>
     {
-        void Move();
         void Stop();
         void MakeThread(int period);
-        double current_Y { get; set; }
-        double next_Y { get; set; }
-        double current_X { get; set; }
-        double next_X { get; set; }
+        Position P { get; }
+        Position V { get; set; }
         int ID { get; set; }
-
     }
 
-    internal class Ball : IBall // zakładamy że każda kula ma masę 1 i promień 10.
+    internal class Ball : IBall
     {
-        private double current_y;
-        private double next_y;
-        private double current_x;
-        private double next_x;
+        private Position position;
+        private Position velocity;
         private int id;
-
         private bool stop = false;
         private Thread thread;
+        private readonly Mutex mutex = new Mutex();
+        private readonly List<IObserver<IBall>> observers = new List<IObserver<IBall>>();
 
-        public Ball(int id, double current_X, double current_Y, double next_X, double next_Y)
+        public Ball(int id, float x, float y, double v_x, double v_y)
         {
             this.id = id;
-            this.current_x = current_X;
-            this.current_y = current_Y;
-            this.next_x = next_X;
-            this.next_y = next_Y;
+            this.position = new Position(x, y);
+            this.velocity = new Position(v_x, v_y);
+            NotifyObservers();
         }
 
-        public int ID
+        public Position P => position;
+        public Position V { get => velocity; set => velocity = value; }
+        public int ID { get => id; set => id = value; }
+
+        private void Move(double time)
         {
-            get => id;
-            set
-            {
-                id = value;
-            }
+            mutex.WaitOne();
+            double new_x = (position.X + V.X * time);
+            double new_y = (position.Y + V.Y *  time);
+            this.position = new Position(new_x, new_y);
+            NotifyObservers(); 
+            mutex.ReleaseMutex();
         }
 
-        public double current_X
+        public IDisposable Subscribe(IObserver<IBall> observer)
         {
-            get => current_x;
-            set
-            {
-                if (value.Equals(current_x))
-                {
-                    return;
-                }
-
-                current_x = value;
-                RaisePropertyChanged(nameof(current_X));
-            }
-        }
-
-        public double current_Y
-        {
-            get => current_y;
-            set
-            {
-                if (value.Equals(current_y))
-                {
-                    return;
-                }
-
-                current_y = value;
-                RaisePropertyChanged(nameof(current_Y));
-            }
-        }
-
-        public double next_X
-        {
-            get => next_x;
-            set
-            {
-                if (value.Equals(next_x))
-                {
-                    return;
-                }
-
-                next_x = value;
-            }
-        }
-        public double next_Y
-        {
-            get => next_y;
-            set
-            {
-                if (value.Equals(next_y))
-                {
-                    return;
-                }
-
-                next_y = value;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        internal void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Move()
-        {
-            current_X += next_X;
-            current_Y += next_Y;
+            if (!observers.Contains(observer))
+                observers.Add(observer);
+            return new SubscriptionToken(observers, observer);
         }
 
         public void MakeThread(int period)
@@ -126,18 +65,51 @@ namespace DataLayer
         {
             while (!stop)
             {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                Thread.Sleep(period);
+
+                stopwatch.Stop();
+                double time = (double)stopwatch.Elapsed.TotalSeconds;
+
                 if (!stop)
                 {
-                    Move();
+                    Move(time);
                 }
-
-                Thread.Sleep(period);
             }
         }
 
         public void Stop()
         {
             stop = true;
+            thread.Join();
+        }
+
+        private void NotifyObservers()
+        {
+            foreach (var observer in observers.ToArray())
+            {
+                observer.OnNext(this);
+            }
+        }
+
+    }
+
+    public class SubscriptionToken : IDisposable
+    {
+        private readonly ICollection<IObserver<IBall>> observers;
+        private readonly IObserver<IBall> observer;
+
+        public SubscriptionToken(ICollection<IObserver<IBall>> observers, IObserver<IBall> observer)
+        {
+            this.observers = observers;
+            this.observer = observer;
+        }
+
+        public void Dispose()
+        {
+            if (observer != null && observers.Contains(observer))
+                observers.Remove(observer);
         }
     }
 }

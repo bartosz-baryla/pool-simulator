@@ -1,5 +1,7 @@
 ﻿using Model;
+using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -10,7 +12,7 @@ namespace ViewModel
     {
         private readonly AbstractModelApi modelObj;
         private int ballsCount = 5;
-        private IList balls;
+        private ObservableCollection<IModelBall> balls; // ObservableCollection<> piłek każda piłka subskrybuje osobną piłkę warstwy niżej itd.
         private bool is_first = true;
 
         public ICommand StartCommand { get; set; }
@@ -27,7 +29,7 @@ namespace ViewModel
             SubtractCommand = new RelayCommand(SubtractAction);
         }
 
-        public IList Balls
+        public ObservableCollection<IModelBall> Balls
         {
             get => balls;
             set
@@ -83,6 +85,7 @@ namespace ViewModel
             }
         }
 
+
     }
 
     public abstract class ViewModelBase : INotifyPropertyChanged
@@ -93,6 +96,7 @@ namespace ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 
 }
