@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.IO;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DataLayer
 {
@@ -11,6 +14,7 @@ namespace DataLayer
         public abstract int BallsCount { get; }
         public abstract IList CreateBalls(int number);
         public abstract IBall GetBall(int id);
+        public abstract Task CreateLoggingTask(ConcurrentQueue<LoggerBall> logQueue);
         public static DataAbstractApi CreateApi()
         {
             return new DataApi();
@@ -22,6 +26,8 @@ namespace DataLayer
         private readonly Mutex mutex = new Mutex();
         private readonly int height = 400;
         private readonly int width = 800;
+        private object locker = new object();
+        private static System.Threading.Timer timer;
 
 
         public DataApi()
@@ -47,6 +53,34 @@ namespace DataLayer
             }
 
             return balls;
+        }
+
+        public override Task CreateLoggingTask(ConcurrentQueue<LoggerBall> queue)
+        {
+            return CallLogger(queue);
+        }
+
+        internal async Task CallLogger(ConcurrentQueue<LoggerBall> queue) // Logger ball jest immutable
+        {
+            while (true)
+            {
+                if (queue.TryDequeue(out LoggerBall logObject)) //Jeśli kolejka jest pusta, TryDequeue zwróci false
+                {
+                    if (logObject != null)
+                    {
+                        string data = JsonSerializer.Serialize(logObject);
+                        string log = "\n" + data + "\n";
+                        string directory = Directory.GetCurrentDirectory();
+                        string filePath = Path.Combine(directory, "Loggs.json");
+
+                        lock (locker)
+                        {
+                            File.AppendAllText(filePath, log);
+                        }
+                    }
+                }
+                await Task.Delay(TimeSpan.FromSeconds(1)); // wprowadzam w stan suspended
+            }
         }
 
         public override int BallsCount { get => balls.Count; }
