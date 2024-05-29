@@ -3,7 +3,6 @@ using System.Threading;
 using System;
 using System.Collections.Generic;
 using Helpers;
-using System.Collections.Concurrent;
 
 namespace LogicLayer
 {
@@ -35,12 +34,12 @@ namespace LogicLayer
         private readonly DataAbstractApi dataLayer;
         private readonly Mutex mutex = new Mutex();
         private IList<ILogicBall> balls = new List<ILogicBall>();
-        private ConcurrentQueue<LoggerBall> queue;
+        private BoundedConcurrentQueue<LoggerBall> queue;
 
         public LogicApi()
         {
             dataLayer = DataAbstractApi.CreateApi();
-            this.queue = new ConcurrentQueue<LoggerBall>();
+            this.queue = new BoundedConcurrentQueue<LoggerBall>();
 
         }
 

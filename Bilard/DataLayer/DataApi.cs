@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Helpers;
+using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -14,7 +14,7 @@ namespace DataLayer
         public abstract int BallsCount { get; }
         public abstract IList CreateBalls(int number);
         public abstract IBall GetBall(int id);
-        public abstract Task CreateLoggingTask(ConcurrentQueue<LoggerBall> logQueue);
+        public abstract Task CreateLoggingTask(BoundedConcurrentQueue<LoggerBall> logQueue);
         public static DataAbstractApi CreateApi()
         {
             return new DataApi();
@@ -27,7 +27,6 @@ namespace DataLayer
         private readonly int height = 400;
         private readonly int width = 800;
         private object locker = new object();
-        private static System.Threading.Timer timer;
 
 
         public DataApi()
@@ -55,12 +54,12 @@ namespace DataLayer
             return balls;
         }
 
-        public override Task CreateLoggingTask(ConcurrentQueue<LoggerBall> queue)
+        public override Task CreateLoggingTask(BoundedConcurrentQueue<LoggerBall> queue)
         {
             return CallLogger(queue);
         }
 
-        internal async Task CallLogger(ConcurrentQueue<LoggerBall> queue) // Logger ball jest immutable
+        internal async Task CallLogger(BoundedConcurrentQueue<LoggerBall> queue) // Logger ball jest immutable
         {
             while (true)
             {
@@ -78,8 +77,12 @@ namespace DataLayer
                             File.AppendAllText(filePath, log);
                         }
                     }
+                } 
+                else
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1)); // wprowadzam w stan suspended jeżeli kolejka jest pusta
                 }
-                await Task.Delay(TimeSpan.FromSeconds(1)); // wprowadzam w stan suspended
+
             }
         }
 

@@ -1,12 +1,6 @@
-﻿using Helpers;
-using LogicLayer;
-using System;
-using System.Collections;
+﻿using LogicLayer;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Model
 {

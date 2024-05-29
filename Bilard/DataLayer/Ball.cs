@@ -1,6 +1,5 @@
 ﻿using Helpers;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -10,7 +9,7 @@ namespace DataLayer
     public interface IBall : IObservable<IBall>
     {
         void Stop();
-        void MakeThread(int period, ConcurrentQueue<LoggerBall> queue);
+        void MakeThread(int period, BoundedConcurrentQueue<LoggerBall> queue);
         Position P { get; }
         Position V { get; set; }
         int ID { get; set; }
@@ -38,7 +37,7 @@ namespace DataLayer
         public Position V { get => velocity; set => velocity = value; }
         public int ID { get => id; set => id = value; }
 
-        private void Move(double time, ConcurrentQueue<LoggerBall> queue)
+        private void Move(double time, BoundedConcurrentQueue<LoggerBall> queue)
         {
             mutex.WaitOne();
             double new_x = (position.X + V.X * time);
@@ -48,11 +47,10 @@ namespace DataLayer
             SaveDataInQueue(queue);
             mutex.ReleaseMutex();
         }
-        public void SaveDataInQueue(ConcurrentQueue<LoggerBall> queue)
+        public void SaveDataInQueue(BoundedConcurrentQueue<LoggerBall> queue)
         {
             string hour = DateTime.Now.ToString("HH:mm:ss.fff");
             queue.Enqueue(new LoggerBall(this.ID, this.position.X, this.position.Y, this.velocity.X, this.velocity.Y, hour));
-            // po przepełnieniu bufora tracimy dane diagnostyczne trzeba poinformować.
         }
 
         public IDisposable Subscribe(IObserver<IBall> observer)
@@ -62,16 +60,16 @@ namespace DataLayer
             return new SubscriptionToken(observers, observer);
         }
 
-        public void MakeThread(int period, ConcurrentQueue<LoggerBall> queue)
+        public void MakeThread(int period, BoundedConcurrentQueue<LoggerBall> queue)
         {
             stop = false;
             thread = new Thread(() => Run(period, queue));
             thread.Start();
         }
 
-        private void Run(int period, ConcurrentQueue<LoggerBall> queue)
+        private void Run(int period, BoundedConcurrentQueue<LoggerBall> queue)
         {
-            double time = 1; // Czas do pierwszego wywołania move na sztywno.
+            double time = 0;
             while (!stop)
             {
                 Stopwatch stopwatch = new Stopwatch();
@@ -100,7 +98,7 @@ namespace DataLayer
         {
             foreach (var observer in observers.ToArray())
             {
-                observer.OnNext(this); // przekazywanie pozycji a nie całej kulki.
+                observer.OnNext(this);
             }
         }
 
