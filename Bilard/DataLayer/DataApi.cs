@@ -80,8 +80,9 @@ namespace DataLayer
                 } 
                 else
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(1)); // wprowadzam w stan suspended jeżeli kolejka jest pusta
+                    await Task.Delay(TimeSpan.FromSeconds(1));
                 }
+                await Task.Delay(TimeSpan.FromSeconds(0.01));
 
             }
         }
