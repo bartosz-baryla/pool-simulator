@@ -13,7 +13,7 @@ namespace Helpers
         public BoundedConcurrentQueue()
         {
             _queue = new ConcurrentQueue<T>();
-            _capacity = 10000; 
+            _capacity = 100000; 
         }
 
         // Metoda dodająca element do kolejki
