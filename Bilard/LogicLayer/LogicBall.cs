@@ -1,44 +1,56 @@
 ﻿using DataLayer;
-using Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicLayer
 {
     public interface ILogicBall : IObserver<IBall>,  IObservable<ILogicBall>
     {
-        Position P { get; set; }
+        double X { get; set; }
+        double Y { get; set; }
     }
 
     internal class LogicBall : ILogicBall
     {
         private readonly List<IObserver<ILogicBall>> observers = new List<IObserver<ILogicBall>>();
-        private Position position;
+        private double x;
+        private double y;
 
-        public Position P 
-        { 
-            get => position;
+        public double X
+        {
+            get => x;
             set
             {
-                if (value.Equals(position))
+                if (value.Equals(x))
                 {
                     return;
                 }
 
-                position = value;
-                NotifyObservers();
+                x = value;
             }
+        }
 
+        public double Y
+        {
+            get => y;
+            set
+            {
+                if (value.Equals(y))
+                {
+                    return;
+                }
+
+                y = value;
+            }
         }
 
         public void OnCompleted() { }
         public void OnError(Exception error) { }
         public void OnNext(IBall value)
         {
-            P = value.P;
+            X = value.P.X;
+            Y = value.P.Y;
+            NotifyObservers();
         }
 
         public IDisposable Subscribe(IObserver<ILogicBall> observer)

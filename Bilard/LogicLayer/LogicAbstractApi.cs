@@ -2,7 +2,6 @@
 using System.Threading;
 using System;
 using System.Collections.Generic;
-using Helpers;
 
 namespace LogicLayer
 {
@@ -34,12 +33,12 @@ namespace LogicLayer
         private readonly DataAbstractApi dataLayer;
         private readonly Mutex mutex = new Mutex();
         private IList<ILogicBall> balls = new List<ILogicBall>();
-        private BoundedConcurrentQueue<LoggerBall> queue;
+        private IBoundedConcurrentQueue<LoggerBall> queue;
 
         public LogicApi()
         {
             dataLayer = DataAbstractApi.CreateApi();
-            this.queue = new BoundedConcurrentQueue<LoggerBall>();
+            this.queue = IBoundedConcurrentQueue<LoggerBall>.CreateQueue();
 
         }
 
@@ -55,7 +54,8 @@ namespace LogicLayer
             {
                 IBall ball = dataLayer.GetBall(i);
                 LogicBall logicBall = new LogicBall();
-                logicBall.P = ball.P;
+                logicBall.X = ball.P.X;
+                logicBall.Y = ball.P.Y;
                 balls.Add(logicBall);
                 ball.Subscribe(logicBall);
                 ball.Subscribe(this);
@@ -116,14 +116,14 @@ namespace LogicLayer
             if (ball.P.Y <= topWall || ball.P.Y >= bottomWall)
             {
                 // Zmiana kierunku prędkości na osi Y
-                ball.V = new Position(ball.V.X, -ball.V.Y);
+                ball.V = IVector.CreateVector(ball.V.X, -ball.V.Y);
             }
 
             // Sprawdzenie kolizji z lewą i prawą krawędzią
             if (ball.P.X <= leftWall || ball.P.X >= rightWall)
             {
                 // Zmiana kierunku prędkości na osi X
-                ball.V = new Position(-ball.V.X, ball.V.Y);
+                ball.V = IVector.CreateVector(-ball.V.X, ball.V.Y);
             }
 
             // Sprawdzamy, czy nie dochodzi do kolizji między piłkami, zmieniamy pozycje kuli
@@ -146,8 +146,8 @@ namespace LogicLayer
                     double u2x = (v2x * (1 - mass) + 2 * mass * v1x) / (mass * 2);
                     double u2y = (v2y * (1 - mass) + 2 * mass * v1y) / (mass * 2);
 
-                    ball.V = new Position(u1x, u1y);
-                    secondBall.V = new Position(u2x, u2y);
+                    ball.V = IVector.CreateVector(u1x, u1y);
+                    secondBall.V = IVector.CreateVector(u2x, u2y);
                 }
             }
         }

@@ -32,8 +32,8 @@ namespace Model
             {
                 ILogicBall ball = LogicLayer.GetLogicBall(i);
                 ModelBall ball2 = new ModelBall();
-                ball2.X = ball.P.X; 
-                ball2.Y = ball.P.Y;
+                ball2.X = ball.X; 
+                ball2.Y = ball.Y;
                 ball.Subscribe(ball2);
                 modelBalls.Add(ball2);
             }

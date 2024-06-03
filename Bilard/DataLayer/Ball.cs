@@ -1,4 +1,4 @@
-﻿using Helpers;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,16 +9,16 @@ namespace DataLayer
     public interface IBall : IObservable<IBall>
     {
         void Stop();
-        void MakeThread(int period, BoundedConcurrentQueue<LoggerBall> queue);
-        Position P { get; }
-        Position V { get; set; }
+        void MakeThread(int period, IBoundedConcurrentQueue<LoggerBall> queue);
+        IVector P { get; }
+        IVector V { get; set; }
         int ID { get; set; }
     }
 
     internal class Ball : IBall
     {
-        private Position position;
-        private Position velocity;
+        private IVector position;
+        private IVector velocity;
         private int id;
         private bool stop = false;
         private Thread thread;
@@ -28,26 +28,26 @@ namespace DataLayer
         public Ball(int id, float x, float y, double v_x, double v_y)
         {
             this.id = id;
-            this.position = new Position(x, y);
-            this.velocity = new Position(v_x, v_y);
+            this.position = IVector.CreateVector(x, y);
+            this.velocity = IVector.CreateVector(v_x, v_y);
             NotifyObservers();
         }
 
-        public Position P => position;
-        public Position V { get => velocity; set => velocity = value; }
+        public IVector P => position;
+        public IVector V { get => velocity; set => velocity = value; }
         public int ID { get => id; set => id = value; }
 
-        private void Move(double time, BoundedConcurrentQueue<LoggerBall> queue)
+        private void Move(double time, IBoundedConcurrentQueue<LoggerBall> queue)
         {
             mutex.WaitOne();
             double new_x = (position.X + V.X * time);
             double new_y = (position.Y + V.Y *  time);
-            this.position = new Position(new_x, new_y);
+            this.position = IVector.CreateVector(new_x, new_y);
             NotifyObservers();
             SaveDataInQueue(queue);
             mutex.ReleaseMutex();
         }
-        public void SaveDataInQueue(BoundedConcurrentQueue<LoggerBall> queue)
+        public void SaveDataInQueue(IBoundedConcurrentQueue<LoggerBall> queue)
         {
             string hour = DateTime.Now.ToString("HH:mm:ss.fff");
             queue.Enqueue(new LoggerBall(this.ID, this.position.X, this.position.Y, this.velocity.X, this.velocity.Y, hour));
@@ -60,14 +60,14 @@ namespace DataLayer
             return new SubscriptionToken(observers, observer);
         }
 
-        public void MakeThread(int period, BoundedConcurrentQueue<LoggerBall> queue)
+        public void MakeThread(int period, IBoundedConcurrentQueue<LoggerBall> queue)
         {
             stop = false;
             thread = new Thread(() => Run(period, queue));
             thread.Start();
         }
 
-        private void Run(int period, BoundedConcurrentQueue<LoggerBall> queue)
+        private void Run(int period, IBoundedConcurrentQueue<LoggerBall> queue)
         {
             double time = 0;
             while (!stop)
@@ -76,7 +76,7 @@ namespace DataLayer
                 
                 stopwatch.Start();
 
-                if (!stop)
+                if (!stop) 
                 {
                     Move(time, queue);// Przy następnych wywołaniach move bierzemy zmierzony czas poprzedniego.
                 }

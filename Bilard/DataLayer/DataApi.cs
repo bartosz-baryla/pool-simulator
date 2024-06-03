@@ -1,5 +1,4 @@
-﻿using Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ namespace DataLayer
         public abstract int BallsCount { get; }
         public abstract IList CreateBalls(int number);
         public abstract IBall GetBall(int id);
-        public abstract Task CreateLoggingTask(BoundedConcurrentQueue<LoggerBall> logQueue);
+        public abstract Task CreateLoggingTask(IBoundedConcurrentQueue<LoggerBall> logQueue);
         public static DataAbstractApi CreateApi()
         {
             return new DataApi();
@@ -54,12 +53,12 @@ namespace DataLayer
             return balls;
         }
 
-        public override Task CreateLoggingTask(BoundedConcurrentQueue<LoggerBall> queue)
+        public override Task CreateLoggingTask(IBoundedConcurrentQueue<LoggerBall> queue)
         {
             return CallLogger(queue);
         }
 
-        internal async Task CallLogger(BoundedConcurrentQueue<LoggerBall> queue) // Logger ball jest immutable
+        internal async Task CallLogger(IBoundedConcurrentQueue<LoggerBall> queue) // Logger ball jest immutable
         {
             while (true)
             {

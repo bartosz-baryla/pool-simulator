@@ -1,5 +1,4 @@
-﻿using Helpers;
-using LogicLayer;
+﻿using LogicLayer;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -57,8 +56,8 @@ namespace Model
         public void OnError(Exception error) { }
         public void OnNext(ILogicBall value)
         {
-            X = value.P.X * 1.0; 
-            Y = value.P.Y * 1.0;
+            X = value.X * 1.0; 
+            Y = value.Y * 1.0;
         }
 
     }

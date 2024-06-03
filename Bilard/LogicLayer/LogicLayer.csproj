@@ -79,10 +79,6 @@
       <Project>{6c2e18a3-34ea-47fd-93eb-510ad96b6ff3}</Project>
       <Name>DataLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Helpers\Helpers.csproj">
-      <Project>{2c2179ef-2508-483f-b7a6-c0635943359b}</Project>
-      <Name>Helpers</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
