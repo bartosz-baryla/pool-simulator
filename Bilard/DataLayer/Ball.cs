@@ -44,13 +44,13 @@ namespace DataLayer
             double new_y = (position.Y + V.Y *  time);
             this.position = IVector.CreateVector(new_x, new_y);
             NotifyObservers();
-            SaveDataInQueue(queue);
+            DateTime timeLoggs = DateTime.UtcNow;
+            SaveDataInQueue(queue, timeLoggs);
             mutex.ReleaseMutex();
         }
-        public void SaveDataInQueue(IBoundedConcurrentQueue<LoggerBall> queue)
+        public void SaveDataInQueue(IBoundedConcurrentQueue<LoggerBall> queue, DateTime time)
         {
-            string hour = DateTime.Now.ToString("HH:mm:ss.fff");
-            queue.Enqueue(new LoggerBall(this.ID, this.position.X, this.position.Y, this.velocity.X, this.velocity.Y, hour));
+            queue.Enqueue(new LoggerBall(this.ID, this.position.X, this.position.Y, this.velocity.X, this.velocity.Y, time));
         }
 
         public IDisposable Subscribe(IObserver<IBall> observer)

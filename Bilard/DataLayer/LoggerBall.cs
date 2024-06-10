@@ -1,4 +1,6 @@
-﻿namespace DataLayer
+﻿using System;
+
+namespace DataLayer
 {
     public class LoggerBall
     {
@@ -7,9 +9,9 @@
         private readonly double y;
         private readonly double vx;
         private readonly double vy;
-        private readonly string time;
+        private readonly DateTime time;
 
-        public LoggerBall(int id, double x, double y, double vx, double vy, string time)
+        public LoggerBall(int id, double x, double y, double vx, double vy, System.DateTime time)
         {
             this.id = id;
             this.x = x;
@@ -20,7 +22,7 @@
         }
 
         public int ID => id;
-        public string Time => time;
+        public DateTime Time => time;
         public double X => x;
         public double Y => y;
         public double VX => vx;
